@@ -2,13 +2,11 @@ import React, {useEffect, useRef} from 'react';
 import './BallPit.scss';
 
 export default () => {
-    let canvas, ctx, gravity, ball, friction;
-
+    let canvas, ctx, ball, requestRef;
     canvas = useRef(null);
-    let requestRef;
 
-    gravity = 0.25;
-    friction = 0.98;
+    const gravity = 0.25;
+    const friction = 0.98;
 
     useEffect(() => {
         init();
@@ -19,12 +17,10 @@ export default () => {
     const init = () => {
         if (canvas.current) {
             ctx = canvas.current.getContext('2d');
-            canvas.current.width = 500;
-            canvas.current.height = 500;
         }
 
         ball = {
-            bounce: 0.75, // energy lost on bounce (25%)
+            bounce: 0.9, // energy lost on bounce (25%)
             radius: 30,
             x: canvas.current.width / 2,
             y: canvas.current.height / 2,
@@ -35,8 +31,8 @@ export default () => {
     }
     const update = () => {
         // queue the next update
-        requestRef = requestAnimationFrame(update);
-
+        requestRef = requestAnimationFrame(() => update());
+        console.log('update');
         // bottom bound / floor
         if (ball.y + ball.radius >= canvas.current.height) {
             ball.velY *= -ball.bounce;
@@ -66,15 +62,15 @@ export default () => {
             ball.velX = 0
         }
         if (ball.velY < 0.01 && ball.velY > -0.01) {
-            ball.velY = 0
+            ball.velY = 0;
         }
 
         // add gravity
-        ball.velY += gravity
+        ball.velY += gravity;
 
         // update ball position
-        ball.x += ball.velX
-        ball.y += ball.velY
+        ball.x += ball.velX;
+        ball.y += ball.velY;
 
         // draw after logic/calculations
         draw();
@@ -82,7 +78,8 @@ export default () => {
     }
 
     const clearScreen = () => {
-        ctx.clearRect(0,
+        ctx.clearRect(
+          0,
           0,
           canvas.current.width,
           canvas.current.height)
@@ -94,7 +91,7 @@ export default () => {
 
             // draw the ball (only object in this scene)
             ctx.beginPath();
-            ctx.fillStyle = 'red';
+            ctx.fillStyle = 'skyblue';
 
             ctx.arc(
                 ball.x,
@@ -103,12 +100,35 @@ export default () => {
                 0,
               Math.PI * 2
             )
+            ctx.closePath();
+
             ctx.fill()
 
         }
     }
 
+    const moveBall = (e) => {
+        console.log(e.clientX, e.clientY);
+        // ball.x = e.clientX;
+        // ball.y = e.clientY;
+        ball = {
+            bounce: 0.75, // energy lost on bounce (25%)
+            radius: 30,
+            x: e.clientX,
+            y: e.clientY,
+            velX: (Math.random() * 15 + 5) * (Math.floor(Math.random() * 2) || -1),
+            velY: (Math.random() * 15 + 5) * (Math.floor(Math.random() * 2) || -1)
+        }
+        console.log(ball);
+        draw();
+        // draw();
+    }
+
+
     return (
-        <canvas ref={canvas} />
+        <canvas ref={canvas}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                onClick={moveBall} />
     );
 }
