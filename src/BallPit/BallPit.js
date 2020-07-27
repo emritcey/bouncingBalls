@@ -7,8 +7,8 @@ export default () => {
     canvas = useRef(null);
     let requestRef;
 
-    gravity = 0.25
-    friction = 0.98
+    gravity = 0.25;
+    friction = 0.98;
 
     useEffect(() => {
         init();
@@ -37,34 +37,28 @@ export default () => {
         // queue the next update
         requestRef = requestAnimationFrame(update);
 
-        // logic goes here
-
         // bottom bound / floor
-        if (ball.y + ball.radius >= canvas.height) {
-            ball.velY *= -ball.bounce
-            ball.y = canvas.current.height - ball.radius
-            ball.velX *= friction
-            console.log('hit bottom');
+        if (ball.y + ball.radius >= canvas.current.height) {
+            ball.velY *= -ball.bounce;
+            ball.y = canvas.current.height - ball.radius;
+            ball.velX *= friction;
         }
         // top bound / ceiling
         if (ball.y - ball.radius <= 0) {
             ball.velY *= -ball.bounce
             ball.y = ball.radius
             ball.velX *= friction
-            console.log('hit ceiling');
         }
 
         // left bound
         if (ball.x - ball.radius <= 0) {
-            ball.velX *= -ball.bounce
-            ball.x = ball.radius
-            console.log('hit left');
+            ball.velX *= -ball.bounce;
+            ball.x = ball.radius;
         }
         // right bound
         if (ball.x + ball.radius >= canvas.current.width) {
-            ball.velX *= -ball.bounce
-            ball.x = canvas.current.width - ball.radius
-            console.log('hit right');
+            ball.velX *= -ball.bounce;
+            ball.x = canvas.current.width - ball.radius;
         }
 
         // reset insignificant amounts to 0
@@ -83,18 +77,20 @@ export default () => {
         ball.y += ball.velY
 
         // draw after logic/calculations
-        draw()
+        draw();
 
     }
 
+    const clearScreen = () => {
+        ctx.clearRect(0,
+          0,
+          canvas.current.width,
+          canvas.current.height)
+    }
+
     const draw = () => {
-        // console.log('draw', ball);
-        // clear the canvas and redraw everything
         if (ctx) {
-            ctx.clearRect(0,
-                0,
-                canvas.current.width,
-                canvas.current.height)
+            clearScreen();
 
             // draw the ball (only object in this scene)
             ctx.beginPath();
@@ -104,14 +100,14 @@ export default () => {
                 ball.x,
                 ball.y,
                 ball.radius,
-                0, Math.PI * 2
+                0,
+              Math.PI * 2
             )
             ctx.fill()
 
         }
     }
 
-    // init();
     return (
         <canvas ref={canvas} />
     );
