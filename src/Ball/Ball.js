@@ -1,28 +1,21 @@
 class Ball {
-	
 	constructor(props) {
 		this.canvas = props.canvas;
 		this.x = props.x;
 		this.y = props.y;
-		this.velX = props.velX;
-		this.velY = props.velY;
 		this.bouncing = props.bouncing;
+
 		this.color = this.getRandomColor();
 		this.radius = this.getRandomRadius();
-		this.bounce = this.defaultProps.bounce;
-		this.velX = this.defaultProps.startVelX;
-		this.velY = this.defaultProps.startVelY;
-	}
-	
-	defaultProps = {
-		bounce: 0.75,
-		startVelX: (Math.random() * 15 + 5) * (Math.floor(Math.random() * 2) || -1),
-		startVelY: (Math.random() * 15 + 5) * (Math.floor(Math.random() * 2) || -1)
+
+		this.velX = (Math.random() * 15 + 5) * (Math.floor(Math.random() * 2) || -1);
+		this.velY = (Math.random() * 15 + 5) * (Math.floor(Math.random() * 2) || -1);
+		this.bounce = 0.75;
+		this.gravity = 0.25;
+		this.friction = 0.98;
 	}
 
-	gravity = 0.25;
-	friction = 0.98;
-
+	// draw updated ball to canvas context
 	draw (ctx) {
 		ctx.save();
 		ctx.beginPath();
@@ -96,6 +89,7 @@ class Ball {
 		}
 	}
 
+	// for variant colored balls
 	getRandomColor () {
 		const letters = '0123456789ABCDEF';
 		let color = '#';
@@ -105,9 +99,8 @@ class Ball {
 		return color;
 	}
 
-	getRandomRadius () {
-		const min = 20;
-		const max = 70;
+	// for variant sized balls
+	getRandomRadius (min = 20, max = 70) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 }

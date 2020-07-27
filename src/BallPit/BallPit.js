@@ -3,7 +3,7 @@ import './BallPit.scss';
 import Ball from "../Ball/Ball";
 
 export default () => {
-    let canvas, ctx, ball, requestRef;
+    let canvas, ctx, requestRef;
     canvas = useRef(null);
 
     let balls = [];
@@ -20,6 +20,7 @@ export default () => {
             ctx = canvas.getContext('2d');
         }
     }
+
     const update = () => {
         clearScreen();
         // only update if there are active balls
