@@ -1,18 +1,19 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef } from 'react';
 import './BallPit.scss';
 import Ball from "../Ball/Ball";
 
 export default () => {
     let canvas, ctx, requestRef;
     canvas = useRef(null);
+    requestRef = useRef(null);
 
     let balls = [];
 
     useEffect(() => {
         init();
-        requestRef = requestAnimationFrame(update);
+        requestRef.current = requestAnimationFrame(update);
         return () => cancelAnimationFrame(requestRef.current);
-    }, []);
+    });
 
     const init = () => {
         if (canvas.current) {
